@@ -1,0 +1,41 @@
+---
+title: "Introduction to dplyr, tidyr, and magrritr"
+subtitle: "CIATEJ 2024"
+author: "Samuel Gamboa"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Load packages 
+
+```{r setup}
+library(dplyr)
+library(tidyr)
+library(magrittr)
+```
+
+## dplyr
+
+Let's check the dplyr documentation:
+
+```{r, eval=FALSE}
+?dplyr::`dplyr-package`
+
+path <- system.file("doc", "dplyr.html", package = "dplyr")
+browseURL(paste("file://", path, sep = ""))
+
+```
+
+
+
+
+
+
+
+
+
