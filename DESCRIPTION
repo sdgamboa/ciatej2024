@@ -12,9 +12,15 @@ LazyData: true
 Imports: 
     dplyr,
     magrittr,
+    palmerpenguins,
     sessioninfo,
     tidyr,
-    utils
+    utils,
+    zebrafishRNASeq
 Config/Needs/website: rmarkdown
 RoxygenNote: 7.3.2
 URL: https://sdgamboa.github.io/ciatej2024/
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

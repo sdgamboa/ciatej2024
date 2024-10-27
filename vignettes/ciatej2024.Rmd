@@ -1,0 +1,39 @@
+---
+title: "ciatej2024"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ciatej2024}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ciatej2024)
+```
+
+Use the `browse*` functions to explore the documentation of
+the magrittr, dplyr, and tidyr packages:
+
+```{r}
+browse_magrittr()
+```
+
+```{r}
+browse_dplyr()
+```
+
+
+```{r}
+browse_tidyr()
+```
+
+```{r}
+sessioninfo::session_info()
+```

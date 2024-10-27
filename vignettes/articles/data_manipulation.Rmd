@@ -1,0 +1,109 @@
+---
+title: "Introduction to data manipulation in R with the tidyverse packages"
+subtitle: "maggritr, dplyr, and tidyr"
+author: "Samuel Gamboa - City University of New York"
+output:
+    html_document:
+        toc: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This document contains a quick introduction to data manipulation in R
+using a few packages from the tidyverse: maggrittr, dplyr, and tidyr.
+
+## Load packages 
+
+```{r setup, message=FALSE}
+library(ciatej2024)
+library(palmerpenguins)
+library(zebrafishRNASeq)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+```
+
+## magrittr
+
+Use the magrittr package to load the pipe (`%>%`) operator.
+
+The pipe operator helps to:
+
+* Chain together the output and input of several function calls.
+* Improve readability of the code.
+
+An example:
+
+```{r}
+letters %>%
+    head %>%
+    length
+```
+
+R provides it's own native pipe:
+
+```{r}
+letters |> 
+    head() |> 
+    length()
+```
+
+I prefer the native pipe. Either option is good, however.
+
+## Tidy data
+
+Tidy data means:
+
++ Observations are in rows (1 observation per row).
++ Variables are in columns (1 variable per column).
+
+The "palmer penguins" dataset is an example of tidy data:
+
+```{r}
+penguins |>
+    head()
+```
+
+A matrix of gene expression would be an example of data that is not in
+"tidy" format.
+
+```{r}
+data("zfGenes")
+head(zfGenes)
+```
+
+## dplyr
+
+Use dplyr to manipulate data.frames (tables).
+
+We'll see functions for:
+
++ Filtering observations (rows) and selecting variables (columns).
++ Transforming (or mutating) the data.
++ Summarizing data.
++ Joining relational tables.
+
+## tidyr
+
+Use tidyr to change the structure of your data using "pivots".
+
++ `pivot_longer` changes the structure of the data to "tidy" format.
++ `pivot_wider` does the opposite of `pivot_longer`.
+
+## Recommended reads
+
++ R for data science: https://r4ds.had.co.nz/.
++ package documentation.
+
+## Session information
+
+```{r}
+sessioninfo::session_info()
+```
