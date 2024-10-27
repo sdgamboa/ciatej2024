@@ -23,19 +23,13 @@ library(magrittr)
 
 Let's check the dplyr documentation:
 
-```{r, eval=FALSE}
-?dplyr::`dplyr-package`
-
-path <- system.file("doc", "dplyr.html", package = "dplyr")
-browseURL(paste("file://", path, sep = ""))
-
+```{r}
+browse_dplyr()
 ```
 
+## Session information
 
-
-
-
-
-
-
+```{r}
+sessioninfo::session_info()
+```
 

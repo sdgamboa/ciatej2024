@@ -12,6 +12,8 @@ LazyData: true
 Imports: 
     dplyr,
     magrittr,
+    sessioninfo,
     tidyr,
     utils
 Config/Needs/website: rmarkdown
+RoxygenNote: 7.3.2
