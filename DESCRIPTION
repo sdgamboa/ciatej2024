@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R:
     c(person(given = "Samuel", family = "Gamboa", role = c("aut", "cre"),
              email = "samuel.gamboa.tuz@gmail.com",
-             comment = c(ORCID = ""))
+             comment = c(ORCID = "0000-0002-6863-7943"))
     )
 Description: Material for CIATEJ2024
 License: What license is it under?
@@ -20,7 +20,7 @@ Imports:
     utils
 Config/Needs/website: rmarkdown
 RoxygenNote: 7.3.2
-URL: https://sdgamboa.github.io/ciatej2024/
+URL: https://sdgamboa.github.io/ciatej2024/, https://github.com/sdgamboa/ciatej2024
 Suggests: 
     knitr,
     rmarkdown
