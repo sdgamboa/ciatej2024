@@ -93,7 +93,7 @@ operator.</p>
 <p>The pipe operator helps to:</p>
 <ul>
 <li>Chain together the output and input of several function calls.</li>
-<li>Improve readability of the code.</li>
+<li>Improve code readability.</li>
 </ul>
 <p>An example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -107,15 +107,16 @@ operator.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6</span></span></code></pre></div>
-<p>I prefer the native pipe. Either option is good, however.</p>
 </div>
 <div class="section level2">
 <h2 id="tidy-data">Tidy data<a class="anchor" aria-label="anchor" href="#tidy-data"></a>
 </h2>
 <p>Tidy data means:</p>
 <ul>
-<li>Observations are in rows (1 observation per row).</li>
-<li>Variables are in columns (1 variable per column).</li>
+<li>Observations are in the rows of a table (1 observation per
+row).</li>
+<li>Variables are in the columns of a table (1 variable per
+column).</li>
 </ul>
 <p>The “palmer penguins” dataset is an example of tidy data:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -150,20 +151,195 @@ in “tidy” format.</p>
 <div class="section level2">
 <h2 id="dplyr">dplyr<a class="anchor" aria-label="anchor" href="#dplyr"></a>
 </h2>
-<p>Use dplyr to manipulate data.frames (tables).</p>
-<p>We’ll see functions for:</p>
+<p>The dplyr package provides verbs (function) to manipulate data.frames
+(tables).</p>
 <ul>
-<li>Filtering observations (rows) and selecting variables
-(columns).</li>
-<li>Transforming (or mutating) the data.</li>
-<li>Summarizing data.</li>
-<li>Joining relational tables.</li>
+<li>Filter observations (rows) and selecting variables (columns).</li>
+<li>Transform (or mutate) variables.</li>
+<li>Summarize data.</li>
+<li>Join relational tables.</li>
 </ul>
+<p>Let’s clean the palmer penguins dataset:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">penguins_raw</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 17</span></span></span>
+<span><span class="co">#&gt;   studyName `Sample Number` Species          Region Island Stage `Individual ID`</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> PAL0708                 1 Adelie Penguin … Anvers Torge… Adul… N1A1           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> PAL0708                 2 Adelie Penguin … Anvers Torge… Adul… N1A2           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> PAL0708                 3 Adelie Penguin … Anvers Torge… Adul… N2A1           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> PAL0708                 4 Adelie Penguin … Anvers Torge… Adul… N2A2           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> PAL0708                 5 Adelie Penguin … Anvers Torge… Adul… N3A1           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> PAL0708                 6 Adelie Penguin … Anvers Torge… Adul… N3A2           </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: `Clutch Completion` &lt;chr&gt;, `Date Egg` &lt;date&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Culmen Length (mm)` &lt;dbl&gt;, `Culmen Depth (mm)` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Flipper Length (mm)` &lt;dbl&gt;, `Body Mass (g)` &lt;dbl&gt;, Sex &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `Delta 15 N (o/oo)` &lt;dbl&gt;, `Delta 13 C (o/oo)` &lt;dbl&gt;, Comments &lt;chr&gt;</span></span></span></code></pre></div>
+<blockquote>
+<p>Use View() to explore a dataset.</p>
+</blockquote>
+<div class="section level3">
+<h3 id="rename">rename<a class="anchor" aria-label="anchor" href="#rename"></a>
+</h3>
+<p>Use <code>rename</code> to rename variables:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">penguins_raw</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>        study_name <span class="op">=</span> <span class="va">studyName</span>,</span>
+<span>        sample_number <span class="op">=</span> <span class="va">`Sample Number`</span>,</span>
+<span>        species <span class="op">=</span> <span class="va">Species</span>,</span>
+<span>        region <span class="op">=</span> <span class="va">Region</span>,</span>
+<span>        island <span class="op">=</span> <span class="va">Island</span>,</span>
+<span>        stage <span class="op">=</span> <span class="va">Stage</span>,</span>
+<span>        id <span class="op">=</span> <span class="va">`Individual ID`</span>,</span>
+<span>        clutch_completion <span class="op">=</span> <span class="va">`Clutch Completion`</span>,</span>
+<span>        date_egg <span class="op">=</span> <span class="va">`Date Egg`</span>,</span>
+<span>        culmen_length <span class="op">=</span> <span class="va">`Culmen Length (mm)`</span>,</span>
+<span>        culmen_depth <span class="op">=</span> <span class="va">`Culmen Depth (mm)`</span>,</span>
+<span>        flipper_length <span class="op">=</span> <span class="va">`Flipper Length (mm)`</span>,</span>
+<span>        body_mass <span class="op">=</span> <span class="va">`Body Mass (g)`</span>,</span>
+<span>        sex <span class="op">=</span> <span class="va">Sex</span>,</span>
+<span>        delta_n <span class="op">=</span> <span class="va">`Delta 15 N (o/oo)`</span>,</span>
+<span>        delat_c <span class="op">=</span> <span class="va">`Delta 13 C (o/oo)`</span>,</span>
+<span>        comments <span class="op">=</span> <span class="va">Comments</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "study_name"        "sample_number"     "species"          </span></span>
+<span><span class="co">#&gt;  [4] "region"            "island"            "stage"            </span></span>
+<span><span class="co">#&gt;  [7] "id"                "clutch_completion" "date_egg"         </span></span>
+<span><span class="co">#&gt; [10] "culmen_length"     "culmen_depth"      "flipper_length"   </span></span>
+<span><span class="co">#&gt; [13] "body_mass"         "sex"               "delta_n"          </span></span>
+<span><span class="co">#&gt; [16] "delat_c"           "comments"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="select">select<a class="anchor" aria-label="anchor" href="#select"></a>
+</h3>
+<p>Use <code>select</code> to select variables or remove variables</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>        <span class="va">species</span>, <span class="va">island</span>, <span class="va">culmen_length</span>, <span class="va">culmen_depth</span>, <span class="va">flipper_length</span>,</span>
+<span>        <span class="va">body_mass</span>, <span class="va">sex</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "species"        "island"         "culmen_length"  "culmen_depth"  </span></span>
+<span><span class="co">#&gt; [5] "flipper_length" "body_mass"      "sex"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="filter">filter<a class="anchor" aria-label="anchor" href="#filter"></a>
+</h3>
+<p>Use <code>filter</code> to filter rows:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## There are shorter ways, but it's out of the scope of this material.</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>        <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">culmen_length</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">culmen_depth</span><span class="op">)</span>,</span>
+<span>        <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">flipper_length</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">body_mass</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sex</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">#&gt;   species       island culmen_length culmen_depth flipper_length body_mass sex  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Adelie Pengu… Torge…          39.1         18.7            181      <span style="text-decoration: underline;">3</span>750 MALE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Adelie Pengu… Torge…          39.5         17.4            186      <span style="text-decoration: underline;">3</span>800 FEMA…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Adelie Pengu… Torge…          40.3         18              195      <span style="text-decoration: underline;">3</span>250 FEMA…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Adelie Pengu… Torge…          36.7         19.3            193      <span style="text-decoration: underline;">3</span>450 FEMA…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Adelie Pengu… Torge…          39.3         20.6            190      <span style="text-decoration: underline;">3</span>650 MALE </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Adelie Pengu… Torge…          38.9         17.8            181      <span style="text-decoration: underline;">3</span>625 FEMA…</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="mutate">mutate<a class="anchor" aria-label="anchor" href="#mutate"></a>
+</h3>
+<p>Use mutate to transform your data. It works with numeric or character
+variables.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       Adelie Penguin (Pygoscelis adeliae) </span></span>
+<span><span class="co">#&gt;                                       146 </span></span>
+<span><span class="co">#&gt; Chinstrap penguin (Pygoscelis antarctica) </span></span>
+<span><span class="co">#&gt;                                        68 </span></span>
+<span><span class="co">#&gt;         Gentoo penguin (Pygoscelis papua) </span></span>
+<span><span class="co">#&gt;                                       119</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>        species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">" .+$"</span>, <span class="st">""</span>, <span class="va">species</span><span class="op">)</span>,</span>
+<span>        sex <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>            <span class="va">sex</span> <span class="op">==</span> <span class="st">"MALE"</span> <span class="op">~</span> <span class="st">"M"</span>,</span>
+<span>            <span class="va">sex</span> <span class="op">==</span> <span class="st">"FEMALE"</span> <span class="op">~</span> <span class="st">"F"</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        body_mass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">body_mass</span> <span class="op">/</span> <span class="fl">1000</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">#&gt;   species island    culmen_length culmen_depth flipper_length body_mass sex  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Adelie  Torgersen          39.1         18.7            181       3.8 M    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Adelie  Torgersen          39.5         17.4            186       3.8 F    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Adelie  Torgersen          40.3         18              195       3.2 F    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Adelie  Torgersen          36.7         19.3            193       3.5 F    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Adelie  Torgersen          39.3         20.6            190       3.6 M    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Adelie  Torgersen          38.9         17.8            181       3.6 F</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="group_by-and-summarize">group_by and summarize<a class="anchor" aria-label="anchor" href="#group_by-and-summarize"></a>
+</h3>
+<p>Use <code>group_by</code> to group variables and
+<code>summarize</code> to create summaries:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat_summary</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>        mean_culmen_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">culmen_length</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        mean_culmen_depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">culmen_depth</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        mean_flipper_length <span class="op">=</span> <span class="va">flipper_length</span>,</span>
+<span>        mean_body_mass <span class="op">=</span> <span class="va">body_mass</span>,</span>
+<span>        n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dat_summary</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    species             island              sex            mean_culmen_length</span></span>
+<span><span class="co">#&gt;  Length:333         Length:333         Length:333         Min.   :36.91     </span></span>
+<span><span class="co">#&gt;  Class :character   Class :character   Class :character   1st Qu.:40.07     </span></span>
+<span><span class="co">#&gt;  Mode  :character   Mode  :character   Mode  :character   Median :45.56     </span></span>
+<span><span class="co">#&gt;                                                           Mean   :43.99     </span></span>
+<span><span class="co">#&gt;                                                           3rd Qu.:49.47     </span></span>
+<span><span class="co">#&gt;                                                           Max.   :51.09     </span></span>
+<span><span class="co">#&gt;  mean_culmen_depth mean_flipper_length mean_body_mass        n        </span></span>
+<span><span class="co">#&gt;  Min.   :14.24     Min.   :172         Min.   :2.700   Min.   :22.00  </span></span>
+<span><span class="co">#&gt;  1st Qu.:15.72     1st Qu.:190         1st Qu.:3.500   1st Qu.:24.00  </span></span>
+<span><span class="co">#&gt;  Median :17.59     Median :197         Median :4.000   Median :34.00  </span></span>
+<span><span class="co">#&gt;  Mean   :17.16     Mean   :201         Mean   :4.208   Mean   :38.99  </span></span>
+<span><span class="co">#&gt;  3rd Qu.:18.84     3rd Qu.:213         3rd Qu.:4.800   3rd Qu.:58.00  </span></span>
+<span><span class="co">#&gt;  Max.   :19.39     Max.   :231         Max.   :6.300   Max.   :61.00</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="count-and-arrange">count and arrange<a class="anchor" aria-label="anchor" href="#count-and-arrange"></a>
+</h3>
+<p><code>count</code> is a shortcut for <code>group_by</code> and
+<code>summarize(n = n())</code>. We can use arrange to order our
+data.</p>
+<p>Let’s reorder our data to know the island with the larger number of
+samples:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">island</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">#&gt;   island        n</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Biscoe      163</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Dream       123</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Torgersen    47</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="tidyr">tidyr<a class="anchor" aria-label="anchor" href="#tidyr"></a>
 </h2>
-<p>Use tidyr to change the structure of your data using “pivots”.</p>
+<p>The tidyr are provides functions to change the structure of the data.
+This allows to transform non-tidy data into tidy data.</p>
 <ul>
 <li>
 <code>pivot_longer</code> changes the structure of the data to
@@ -172,11 +348,71 @@ in “tidy” format.</p>
 <code>pivot_wider</code> does the opposite of
 <code>pivot_longer</code>.</li>
 </ul>
+<p>Using the example above (zebrafish data):</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">zg</span> <span class="op">&lt;-</span> <span class="va">zgenes</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames_to_column</a></span><span class="op">(</span>var <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>        names_to <span class="op">=</span> <span class="st">"sample"</span>, values_to <span class="op">=</span> <span class="st">"expr"</span>, cols <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">last_col</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">zg</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;   gene               sample  expr</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSDARG00000000001 Ctl1     304</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSDARG00000000001 Ctl3     129</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSDARG00000000001 Ctl5     339</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSDARG00000000001 Trt9     102</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSDARG00000000001 Trt11     16</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSDARG00000000001 Trt13    617</span></span></code></pre></div>
+<p>We can revert the operation with <code>pivot_wider</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">zg</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
+<span>        names_from <span class="op">=</span> <span class="st">"sample"</span>, values_from <span class="op">=</span> <span class="st">"expr"</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">column_to_rownames</a></span><span class="op">(</span>var <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                    Ctl1 Ctl3 Ctl5 Trt9 Trt11 Trt13</span></span>
+<span><span class="co">#&gt; ENSDARG00000000001  304  129  339  102    16   617</span></span>
+<span><span class="co">#&gt; ENSDARG00000000002  605  637  406   82   230  1245</span></span>
+<span><span class="co">#&gt; ENSDARG00000000018  391  235  217  554   451   565</span></span>
+<span><span class="co">#&gt; ENSDARG00000000019 2979 4729 7002 7309  9395  3349</span></span>
+<span><span class="co">#&gt; ENSDARG00000000068   89  356   41  149    45    44</span></span>
+<span><span class="co">#&gt; ENSDARG00000000069  312  184  844  269   513   243</span></span></code></pre></div>
+<p>Using mutate we can group by treatment and create a summary:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">zg</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Treatment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"\\d+$"</span>, <span class="st">""</span>, <span class="va">sample</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">gene</span>, <span class="va">Treatment</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>        mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">expr</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">expr</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `summarise()` has grouped output by 'gene'. You can override using the</span></span>
+<span><span class="co">#&gt; `.groups` argument.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt;   gene               Treatment  mean    sd     n</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSDARG00000000001 Ctl        257. 113.      3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSDARG00000000001 Trt        245  325.      3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSDARG00000000002 Ctl        549. 125.      3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSDARG00000000002 Trt        519  633.      3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSDARG00000000018 Ctl        281   95.7     3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSDARG00000000018 Trt        523.  62.9     3</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="dplyr-again---joining-tables">dplyr (again) - Joining tables<a class="anchor" aria-label="anchor" href="#dplyr-again---joining-tables"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>dplyr provide <code>*join</code> functions to merge related tables
+based on one or more variables.</p>
+<p>For example, they airway dataset from the “airway” package on
+Bioconductor.</p>
+<p>Import the data (a copy is provided in this package):</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample"</span>, <span class="st">"gene"</span>, <span class="st">"expr"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dat_types</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">dat_types</span></span>
 <span><span class="va">airway</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">dat_types</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
@@ -224,6 +460,62 @@ in “tidy” format.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSG0000000…         60         55         40         35         78         63</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSG0000000…          0          0          2          0          1          0</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: SRR1039520 &lt;int&gt;, SRR1039521 &lt;int&gt;</span></span></span></code></pre></div>
+<p>One dataset needs to be converted to tidy format:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">airway</span><span class="op">$</span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="va">airway</span><span class="op">$</span><span class="va">expr</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span>
+<span>        names_to <span class="op">=</span> <span class="st">"Run"</span>, values_to <span class="op">=</span> <span class="st">"expr"</span>, cols <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">last_col</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airway</span><span class="op">$</span><span class="va">expr</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">#&gt;   gene_id         Run         expr</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSG00000000003 SRR1039508   679</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSG00000000003 SRR1039509   448</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSG00000000003 SRR1039512   873</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSG00000000003 SRR1039513   408</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSG00000000003 SRR1039516  <span style="text-decoration: underline;">1</span>138</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSG00000000003 SRR1039517  <span style="text-decoration: underline;">1</span>047</span></span></code></pre></div>
+<p>Now we can use `dplyr::left_join’ to merge these datasets:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">merged_data</span> <span class="op">&lt;-</span> <span class="va">airway</span><span class="op">$</span><span class="va">expr</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">airway</span><span class="op">$</span><span class="va">gene</span>, by <span class="op">=</span> <span class="st">"gene_id"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">airway</span><span class="op">$</span><span class="va">sample</span>, by <span class="op">=</span> <span class="st">"Run"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">merged_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 20</span></span></span>
+<span><span class="co">#&gt;   gene_id         Run        expr gene_name entrezid gene_biotype gene_seq_start</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ENSG00000000003 SRR10395…   679 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ENSG00000000003 SRR10395…   448 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENSG00000000003 SRR10395…   873 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ENSG00000000003 SRR10395…   408 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ENSG00000000003 SRR10395…  <span style="text-decoration: underline;">1</span>138 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ENSG00000000003 SRR10395…  <span style="text-decoration: underline;">1</span>047 TSPAN6    <span style="color: #BB0000;">NA</span>       protein_cod…       99<span style="text-decoration: underline;">883</span>667</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more variables: gene_seq_end &lt;int&gt;, seq_name &lt;chr&gt;, seq_strand &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   seq_coord_system &lt;lgl&gt;, symbol &lt;chr&gt;, SampleName &lt;chr&gt;, cell &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   dex &lt;chr&gt;, albut &lt;chr&gt;, avgLength &lt;int&gt;, Experiment &lt;chr&gt;, Sample &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   BioSample &lt;chr&gt;</span></span></span></code></pre></div>
+<p>Using dplyr verbs:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">airway_summary</span> <span class="op">&lt;-</span> <span class="va">merged_data</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gene_name</span>, <span class="va">dex</span>, <span class="va">expr</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">gene_name</span>, <span class="va">dex</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span>
+<span>        mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">expr</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">expr</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>        n <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airway_summary</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   gene_name [3]</span></span></span>
+<span><span class="co">#&gt;   gene_name dex      mean     sd     n</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 5S_rRNA   trt   0.009<span style="text-decoration: underline;">62</span> 0.098<span style="text-decoration: underline;">1</span>   104</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 5S_rRNA   untrt 0.028<span style="text-decoration: underline;">8</span>  0.218    104</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 7SK       trt   0.292   0.798     48</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 7SK       untrt 0.104   0.371     48</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> A1BG      trt   6       2.94       4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> A1BG      untrt 9       2.16       4</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="recommended-reads">Recommended reads<a class="anchor" aria-label="anchor" href="#recommended-reads"></a>
@@ -231,12 +523,13 @@ in “tidy” format.</p>
 <ul>
 <li>R for data science: <a href="https://r4ds.had.co.nz/" class="external-link uri">https://r4ds.had.co.nz/</a>.</li>
 <li>package documentation.</li>
+<li>tidySummarizedExperiment.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
@@ -290,6 +583,7 @@ in “tidy” format.</p>
 <span><span class="co">#&gt;  tidyselect       1.2.1   <span style="color: #555555;">2024-03-11</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  utf8             1.2.4   <span style="color: #555555;">2023-10-22</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  vctrs            0.6.5   <span style="color: #555555;">2023-12-01</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
+<span><span class="co">#&gt;  withr            3.0.1   <span style="color: #555555;">2024-07-31</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  xfun             0.48    <span style="color: #555555;">2024-10-03</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt;  yaml             2.3.10  <span style="color: #555555;">2024-07-26</span> <span style="color: #555555;">[1]</span> <span style="color: #BB00BB; font-weight: bold;">RSPM</span></span></span>
 <span><span class="co">#&gt; </span></span>
