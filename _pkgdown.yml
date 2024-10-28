@@ -1,4 +1,5 @@
 url: https://sdgamboa.github.io/ciatej2024/
 template:
-  bootstrap: flatly
+  params:
+    bootswatch: flatly
 
