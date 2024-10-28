@@ -24,7 +24,6 @@ using a few packages from the tidyverse: maggrittr, dplyr, and tidyr.
 ```{r setup, message=FALSE}
 library(ciatej2024)
 library(palmerpenguins)
-library(zebrafishRNASeq)
 library(dplyr)
 library(tidyr)
 library(magrittr)
@@ -75,8 +74,11 @@ A matrix of gene expression would be an example of data that is not in
 "tidy" format.
 
 ```{r}
-data("zfGenes")
-head(zfGenes)
+zgenes_path <- system.file(
+    "extdata", "zgenes.tsv", package = "ciatej2024", mustWork = TRUE
+)
+zgenes <- read.table(zgenes_path, sep = "\t", header = TRUE, row.names = 1)
+head(zgenes)
 ```
 
 ## dplyr
@@ -96,6 +98,24 @@ Use tidyr to change the structure of your data using "pivots".
 
 + `pivot_longer` changes the structure of the data to "tidy" format.
 + `pivot_wider` does the opposite of `pivot_longer`.
+
+## dplyr (again) - Joining tables
+
+```{r}
+dat_types <- c("sample", "gene", "expr")
+names(dat_types) <- dat_types
+airway <- lapply(dat_types, \(x) {
+    fpath <- system.file(
+        "extdata", paste0("airway_", x, "_data.tsv"),
+        package = "ciatej2024", mustWork = TRUE
+    )
+    read.table(
+        file = fpath, header = TRUE, sep = "\t"
+    ) |> 
+        as_tibble()
+})
+lapply(airway, head)
+```
 
 ## Recommended reads
 
