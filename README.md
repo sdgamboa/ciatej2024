@@ -1,4 +1,5 @@
-# Material for CIATEJ 2024 - Introduction to dplyr, tidyr, and maggritr
+
+# Data manipulation with R CIATEJ 2024
 
 This repo can be installed with:
 
