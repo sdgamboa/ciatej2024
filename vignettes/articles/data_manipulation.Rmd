@@ -36,7 +36,7 @@ Use the magrittr package to load the pipe (`%>%`) operator.
 The pipe operator helps to:
 
 * Chain together the output and input of several function calls.
-* Improve readability of the code.
+* Improve code readability.
 
 An example:
 
@@ -54,14 +54,12 @@ letters |>
     length()
 ```
 
-I prefer the native pipe. Either option is good, however.
-
 ## Tidy data
 
 Tidy data means:
 
-+ Observations are in rows (1 observation per row).
-+ Variables are in columns (1 variable per column).
++ Observations are in the rows of a table (1 observation per row).
++ Variables are in the columns of a table (1 variable per column).
 
 The "palmer penguins" dataset is an example of tidy data:
 
@@ -83,23 +81,185 @@ head(zgenes)
 
 ## dplyr
 
-Use dplyr to manipulate data.frames (tables).
+The dplyr package provides verbs (function) to manipulate data.frames (tables).
 
-We'll see functions for:
++ Filter observations (rows) and selecting variables (columns).
++ Transform (or mutate) variables.
++ Summarize data.
++ Join relational tables.
 
-+ Filtering observations (rows) and selecting variables (columns).
-+ Transforming (or mutating) the data.
-+ Summarizing data.
-+ Joining relational tables.
+Let's clean the palmer penguins dataset:
 
+```{r}
+head(penguins_raw)
+```
+
+> Use View() to explore a dataset.
+
+### rename
+
+Use `rename` to rename variables:
+
+```{r}
+dat <- penguins_raw
+dat <- dat |> 
+    rename(
+        study_name = studyName,
+        sample_number = `Sample Number`,
+        species = Species,
+        region = Region,
+        island = Island,
+        stage = Stage,
+        id = `Individual ID`,
+        clutch_completion = `Clutch Completion`,
+        date_egg = `Date Egg`,
+        culmen_length = `Culmen Length (mm)`,
+        culmen_depth = `Culmen Depth (mm)`,
+        flipper_length = `Flipper Length (mm)`,
+        body_mass = `Body Mass (g)`,
+        sex = Sex,
+        delta_n = `Delta 15 N (o/oo)`,
+        delat_c = `Delta 13 C (o/oo)`,
+        comments = Comments
+    )
+colnames(dat)
+```
+
+
+### select
+
+Use `select` to select variables or remove variables
+
+```{r}
+dat <- dat |> 
+    select(
+        species, island, culmen_length, culmen_depth, flipper_length,
+        body_mass, sex
+    )
+colnames(dat)
+```
+
+
+### filter
+
+Use `filter` to filter rows:
+
+```{r}
+## There are shorter ways, but it's out of the scope of this material.
+dat <- dat |> 
+    filter(
+        !is.na(culmen_length), !is.na(culmen_depth),
+        !is.na(flipper_length), !is.na(body_mass), !is.na(sex)
+    )
+head(dat)
+```
+
+### mutate
+
+Use mutate to transform your data. It works with numeric or character
+variables.
+
+```{r}
+table(dat$species)
+```
+
+```{r}
+dat <- dat |> 
+    mutate(
+        species = sub(" .+$", "", species),
+        sex = case_when(
+            sex == "MALE" ~ "M",
+            sex == "FEMALE" ~ "F"
+        ),
+        body_mass = round(body_mass / 1000, 1)
+    )
+head(dat)
+```
+
+### group_by and summarize
+
+Use `group_by` to group variables and `summarize` to create summaries:
+
+```{r, warning=FALSE, message=FALSE}
+dat_summary <- dat |> 
+    group_by(species, island, sex) |> 
+    summarize(
+        mean_culmen_length = mean(culmen_length, na.rm = TRUE),
+        mean_culmen_depth = mean(culmen_depth, na.rm = TRUE),
+        mean_flipper_length = flipper_length,
+        mean_body_mass = body_mass,
+        n = n()
+    ) |> 
+    ungroup()
+summary(dat_summary)
+```
+
+### count and arrange
+
+`count` is a shortcut for `group_by` and `summarize(n = n())`.
+We can use arrange to order our data.
+
+Let's reorder our data to know the island with the larger number of samples:
+
+```{r}
+dat |> 
+    count(island) |> 
+    arrange(-n)
+```
 ## tidyr
 
-Use tidyr to change the structure of your data using "pivots".
+The tidyr are provides functions to change the structure of the data.
+This allows to transform non-tidy data into tidy data.
 
 + `pivot_longer` changes the structure of the data to "tidy" format.
 + `pivot_wider` does the opposite of `pivot_longer`.
 
+
+Using the example above (zebrafish data):
+
+```{r}
+zg <- zgenes |> 
+    tibble::rownames_to_column(var = "gene") |> 
+    pivot_longer(
+        names_to = "sample", values_to = "expr", cols = 2:last_col()
+    )
+head(zg)
+```
+
+We can revert the operation with `pivot_wider`:
+
+```{r}
+zg |> 
+    pivot_wider(
+        names_from = "sample", values_from = "expr"
+    ) |> 
+    tibble::column_to_rownames(var = "gene") |> 
+    head()
+```
+
+Using mutate we can group by treatment and create a summary:
+
+```{r}
+zg |> 
+    mutate(Treatment = sub("\\d+$", "", sample)) |> 
+    group_by(gene, Treatment) |> 
+    summarize(
+        mean = mean(expr, na.rm = TRUE),
+        sd = sd(expr, na.rm = TRUE),
+        n = n()
+    ) |> 
+    ungroup() |> 
+    head()
+```
+
 ## dplyr (again) - Joining tables
+
+dplyr provide `*join` functions to merge related tables based on one or
+more variables.
+
+For example, they airway dataset from the "airway" package on Bioconductor.
+
+Import the data (a copy is provided in this package):
 
 ```{r}
 dat_types <- c("sample", "gene", "expr")
@@ -117,10 +277,44 @@ airway <- lapply(dat_types, \(x) {
 lapply(airway, head)
 ```
 
+One dataset needs to be converted to tidy format:
+
+```{r}
+airway$expr <- airway$expr |> 
+    pivot_longer(
+        names_to = "Run", values_to = "expr", cols = 2:last_col()
+    )
+head(airway$expr)
+```
+
+Now we can use `dplyr::left_join' to merge these datasets:
+
+```{r}
+merged_data <- airway$expr |> 
+    left_join(airway$gene, by = "gene_id") |> 
+    left_join(airway$sample, by = "Run")
+head(merged_data)
+```
+
+Using dplyr verbs:
+
+```{r, message=FALSE}
+airway_summary <- merged_data |> 
+    select(gene_name, dex, expr) |> 
+    group_by(gene_name, dex) |> 
+    summarise(
+        mean = mean(expr, na.rm = TRUE),
+        sd = sd(expr, na.rm = TRUE),
+        n = n()
+    )
+head(airway_summary)
+```
+
 ## Recommended reads
 
 + R for data science: https://r4ds.had.co.nz/.
 + package documentation.
++ tidySummarizedExperiment.
 
 ## Session information
 
