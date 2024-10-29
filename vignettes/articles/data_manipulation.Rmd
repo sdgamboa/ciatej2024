@@ -65,8 +65,8 @@ letters |>
 
 Tidy data means:
 
-+ Observations are in the rows of a table (1 observation per row).
-+ Variables are in the columns of a table (1 variable per column).
++ Observations are in the rows (1 observation per row).
++ Variables are in the columns (1 variable per column).
 
 The "palmer penguins" dataset is an example of tidy data:
 
@@ -132,7 +132,7 @@ colnames(dat)
 
 ### select
 
-Use `select` to select variables or remove variables
+Use `select` to select variables or remove variables:
 
 ```{r}
 dat <- dat |> 
@@ -160,11 +160,7 @@ head(dat)
 ### mutate
 
 Use mutate to transform your data. It works with numeric or character
-variables.
-
-```{r}
-table(dat$species)
-```
+variables:
 
 ```{r}
 dat <- dat |> 
@@ -189,8 +185,8 @@ dat_summary <- dat |>
     summarize(
         mean_culmen_length = mean(culmen_length, na.rm = TRUE),
         mean_culmen_depth = mean(culmen_depth, na.rm = TRUE),
-        mean_flipper_length = flipper_length,
-        mean_body_mass = body_mass,
+        mean_flipper_length = mean(flipper_length, na.rm = TRUE),
+        mean_body_mass = mean(body_mass, na.rm = TRUE),
         n = n()
     ) |> 
     ungroup()

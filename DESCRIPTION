@@ -1,7 +1,7 @@
 Package: ciatej2024
 Type: Package
 Title: CIATEJ 2024
-Version: 1.0.1
+Version: 1.0.2
 Authors@R:
     c(person(given = "Samuel", family = "Gamboa", role = c("aut", "cre"),
              email = "samuel.gamboa.tuz@gmail.com",
