@@ -29,7 +29,6 @@ browse_magrittr()
 browse_dplyr()
 ```
 
-
 ```{r}
 browse_tidyr()
 ```

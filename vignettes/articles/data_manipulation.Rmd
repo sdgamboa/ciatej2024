@@ -1,5 +1,5 @@
 ---
-title: "Introduction to data manipulation in R with the tidyverse packages"
+title: "Introduction to data manipulation with the tidyverse packages"
 subtitle: "maggritr, dplyr, and tidyr"
 author: "Samuel Gamboa - City University of New York"
 output:
@@ -16,10 +16,12 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This document contains a quick introduction to data manipulation in R
+This document contains a quick introduction to data manipulation
 using a few packages from the tidyverse: maggrittr, dplyr, and tidyr.
 
-## Load packages 
+## Packages
+
+The following packages are needed:
 
 ```{r setup, message=FALSE}
 library(ciatej2024)
@@ -28,6 +30,11 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 ```
+
+The `ciatej2024` package contains some datasets obtained from
+the `airway` and `zebrafishRNASeq` packages, which
+are part of the Bioconductor project. Such datasets
+were included here for convenience.
 
 ## magrittr
 
@@ -94,8 +101,6 @@ Let's clean the palmer penguins dataset:
 head(penguins_raw)
 ```
 
-> Use View() to explore a dataset.
-
 ### rename
 
 Use `rename` to rename variables:
@@ -125,7 +130,6 @@ dat <- dat |>
 colnames(dat)
 ```
 
-
 ### select
 
 Use `select` to select variables or remove variables
@@ -138,7 +142,6 @@ dat <- dat |>
     )
 colnames(dat)
 ```
-
 
 ### filter
 
